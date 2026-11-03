@@ -197,8 +197,12 @@ export default function Navbar() {
             </Link>
 
             {/* LOGIN */}
-            <Link href="/login" className="hover:text-black transition">
+            <Link
+              href="/login"
+              className="flex items-center gap-2 text-sm font-medium text-gray-800 hover:text-black transition"
+            >
               <FiUser />
+              <span>Login</span>
             </Link>
 
           </div>
@@ -258,7 +262,7 @@ export default function Navbar() {
         </div>
 
         {/* Bottom Icons (Mobile) */}
-        <div className="border-t p-5 flex justify-around text-xl text-gray-700">
+        <div className="border-t p-5 flex justify-around items-center text-xl text-gray-700">
 
           <Link href="/search" onClick={() => setOpen(false)}>
             <FiSearch />
@@ -268,8 +272,13 @@ export default function Navbar() {
             <FiShoppingCart />
           </Link>
 
-          <Link href="/login" onClick={() => setOpen(false)}>
+          <Link
+            href="/login"
+            onClick={() => setOpen(false)}
+            className="flex items-center gap-2 text-sm font-medium text-gray-800"
+          >
             <FiUser />
+            <span>Login</span>
           </Link>
 
         </div>
