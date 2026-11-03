@@ -127,30 +127,29 @@ export default function Categories() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    console.log("✅ CATEGORIES COMPONENT MOUNTED");
-
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    console.log("API URL:", API_URL);
 
     if (!API_URL) {
-      console.error("❌ API URL missing");
+      console.error("NEXT_PUBLIC_API_URL is not configured");
+      setCategories([]);
       return;
     }
 
     async function fetchCategories() {
       try {
-        console.log("📡 FETCHING CATEGORIES...");
-
         const res = await fetch(`${API_URL}/api/categories`, {
           cache: "no-store",
         });
 
-        const result = await res.json();
-        console.log("✅ CATEGORY DATA:", result);
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
 
-        setCategories(result.data || []);
+        const result = await res.json();
+        setCategories(Array.isArray(result?.data) ? result.data : []);
       } catch (err) {
-        console.error("❌ Error fetching categories:", err);
+        console.error("Failed to load categories:", err);
+        setCategories([]);
       }
     }
 

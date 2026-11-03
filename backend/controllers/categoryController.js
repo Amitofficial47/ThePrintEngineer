@@ -14,7 +14,7 @@ const createCategory = async (req, res) => {
     const category = await Category.create({
       name: name.trim(),
       icon: typeof icon === "string" && icon.trim() ? icon.trim() : "default",
-      image,
+      image: typeof image === "string" ? image.trim() : "",
     });
 
     res.status(201).json({

@@ -149,42 +149,31 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("✅ PRODUCT COMPONENT MOUNTED");
-
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    console.log("🌐 API URL:", API_URL);
 
     async function fetchProducts() {
       try {
         if (!API_URL) {
-          console.error("❌ API URL missing");
+          console.error("NEXT_PUBLIC_API_URL is not configured");
+          setProducts([]);
           return;
         }
-
-        console.log("📡 FETCHING PRODUCTS...");
 
         const res = await fetch(`${API_URL}/api/products`, {
           cache: "no-store",
         });
 
-        console.log("📊 RESPONSE STATUS:", res.status);
-
         if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
+          throw new Error(`HTTP ${res.status}`);
         }
 
         const data = await res.json();
-        console.log("✅ PRODUCT DATA:", data);
-
-        // 🔥 Handle different API response formats safely
-        const productData =
-          data?.data || data?.products || data || [];
-
+        const productData = data?.data || data?.products || data || [];
         setProducts(Array.isArray(productData) ? productData : []);
       } catch (error) {
-        console.error("❌ Error fetching products:", error);
+        console.error("Failed to load products:", error);
+        setProducts([]);
       } finally {
-        // 🔥 ALWAYS stop loading (this was your main issue)
         setLoading(false);
       }
     }

@@ -26,12 +26,24 @@ export default function ShopPage() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
-        //fetch("http://localhost:8080/api/products");
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
+        if (!apiUrl) {
+          console.error("NEXT_PUBLIC_API_URL is not configured");
+          setProducts([]);
+          return;
+        }
+
+        const res = await fetch(`${apiUrl}/api/products`, { cache: "no-store" });
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+
         const data = await res.json();
-        setProducts(data.data || []);
+        setProducts(Array.isArray(data?.data) ? data.data : []);
       } catch (err) {
-        console.log(err);
+        console.error("Failed to load products:", err);
+        setProducts([]);
       } finally {
         setLoading(false);
       }

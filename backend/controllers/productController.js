@@ -19,24 +19,31 @@ const createProduct = async (req, res) => {
       });
     }
 
-    if (Number(price) <= 0) {
+    const parsedPrice = Number(price);
+    if (!Number.isFinite(parsedPrice) || parsedPrice <= 0) {
       return res.status(400).json({
         success: false,
-        message: "Price must be greater than zero",
+        message: "Price must be a valid number greater than zero",
       });
     }
 
-    // ✅ MULTIPLE IMAGES (Cloudinary URLs)
+    const parsedStock = Number(stock ?? 0);
+    if (!Number.isFinite(parsedStock) || parsedStock < 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Stock must be a valid non-negative number",
+      });
+    }
+
     const images = (req.files || []).map((file) => file.path);
 
-    // ✅ CREATE PRODUCT
     const product = await Product.create({
-      name,
-      price,
-      description,
+      name: String(name).trim(),
+      price: parsedPrice,
+      description: description ? String(description).trim() : "",
       category,
-      customizable: customizable === "true", // convert string → boolean
-      stock: Number(stock) || 0, // convert string → number
+      customizable: customizable === true || customizable === "true",
+      stock: parsedStock,
       images,
     });
 
