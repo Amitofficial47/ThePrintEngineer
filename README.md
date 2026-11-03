@@ -1,59 +1,88 @@
-﻿# ThePrintEngineer
+# ThePrintEngineer
 
-A full-stack e-commerce/product catalog application for managing categories and products.
+ThePrintEngineer is a full-stack e-commerce and custom printing storefront built as a monorepo with a Next.js frontend and an Express + MongoDB backend.
 
-## Tech stack
+## Stack
+- Frontend: Next.js 16, React 19, TypeScript, Tailwind CSS
 - Backend: Node.js, Express, MongoDB, Mongoose
-- File uploads: Multer + Cloudinary
-- Security: dotenv, CORS restrictions, input validation, secure env handling
+- Auth: JWT + bcryptjs
+- Uploads: Multer + Cloudinary
 
 ## Project structure
-
 ```text
 ThePrintEngineer/
 ├── backend/
 │   ├── config/
 │   ├── controllers/
+│   ├── middleware/
 │   ├── models/
 │   ├── routes/
 │   ├── .env.example
 │   ├── .gitignore
 │   ├── package.json
+│   ├── README.md
 │   └── server.js
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── public/
+│   ├── .env.example
+│   ├── .gitignore
+│   ├── package.json
+│   ├── README.md
+│   └── tsconfig.json
+├── .gitignore
 ├── README.md
-└── frontend/   # optional frontend app directory
+└── package.json (not present; each app is managed separately)
 ```
 
+## Features
+- Homepage with product and category presentation
+- Responsive product catalog and shop page
+- Category and product APIs with admin protection
+- User registration and login
+- JWT verification middleware
+- Cloudinary-based image uploads
+- Protected admin-only write endpoints
+
 ## Prerequisites
-- Node.js 18 or newer
-- MongoDB database (Atlas or local instance)
+- Node.js 18+
+- MongoDB Atlas or local MongoDB instance
 - Cloudinary account
+- GitHub repo configured for the monorepo
 
-## Backend setup
+## Setup
+### 1. Backend
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+Update the `.env` file with your MongoDB, Cloudinary, and JWT values.
 
-1. Open a terminal in the project root.
-2. Go to the backend folder:
-   ```bash
-   cd backend
-   ```
-3. Create a local environment file from the example:
-   ```bash
-   copy .env.example .env
-   ```
-4. Fill in the real values in `.env`.
-5. Install dependencies:
-   ```bash
-   npm install
-   ```
-6. Start the server:
-   ```bash
-   npm run dev
-   ```
+Run:
+```bash
+npm run dev
+```
+
+### 2. Frontend
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+```
+Update `.env.local` with:
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
+
+Run:
+```bash
+npm run dev
+```
 
 ## Environment variables
-
-Create a `.env` file inside `backend/` using the values below:
-
+### Backend `.env`
 ```env
 MONGO_URI="mongodb://username:password@host:27017/database?authSource=admin"
 PORT=8080
@@ -61,28 +90,66 @@ CLOUD_NAME="your_cloud_name"
 CLOUD_API_KEY="your_cloud_api_key"
 CLOUD_API_SECRET="your_cloud_api_secret"
 CLIENT_URL="http://localhost:3000"
+JWT_SECRET="your_super_secret_jwt_key"
 ```
 
-Notes:
-- Never commit `.env`.
-- Keep all secrets in your local environment or deployment platform.
-- Use `.env.example` as the safe template for teammates.
+### Frontend `.env.local`
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
 
-## Security notes
-- `.env` is ignored by git.
-- CORS is restricted to trusted origins.
-- Request body size is limited.
-- Upload validation restricts files to allowed image types and sizes.
-- Raw errors are not exposed unnecessarily.
+## How it works
+- The frontend sends API requests to the backend on port 8080.
+- The backend uses MongoDB to store users, categories, and products.
+- Cloudinary stores uploaded images.
+- Auth is handled with JWT tokens saved in browser local storage.
+- Admin-only routes require a valid token and `role: "admin"`.
 
-## Available backend routes
-- `GET /test`
+## API routes
+### Public
+- `GET /health`
 - `GET /api/products`
-- `POST /api/products`
 - `GET /api/categories`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+### Protected (admin only)
+- `POST /api/products`
 - `POST /api/categories`
 
-## Next steps
-- Add authentication and authorization for admin-only routes.
-- Add pagination and filtering for product listing.
-- Add automated tests for API validation and database flows.
+## Example login/register payloads
+### Register
+```json
+{
+  "name": "Admin User",
+  "email": "admin@example.com",
+  "password": "secret123"
+}
+```
+
+### Login
+```json
+{
+  "email": "admin@example.com",
+  "password": "secret123"
+}
+```
+
+## Security notes
+- `.env` files are ignored by git.
+- CORS is restricted to allowed local origins.
+- Passwords are hashed with bcryptjs.
+- JWT tokens are validated via middleware.
+- Upload limits and file filtering are enforced.
+
+## Development notes
+- The frontend is designed to run locally on port 3000.
+- The backend runs locally on port 8080.
+- For production, set strong secrets and deploy with environment-specific config.
+
+## Next improvements
+- Add product detail pages
+- Add admin dashboard
+- Add search and filter enhancements
+- Add pagination and sorting
+- Add automated tests and CI checks

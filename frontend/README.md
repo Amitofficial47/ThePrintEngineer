@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend App
 
-## Getting Started
+This folder contains the Next.js frontend for ThePrintEngineer.
 
-First, run the development server:
+## Stack
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+- Fetch-based API integration
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Features
+- Home page with hero, features, categories, and testimonials
+- Product listing page
+- Category display section
+- Login page
+- Signup page
+- Navigation and responsive layout
+- API integration with the backend server
+
+## Project structure
+```text
+frontend/
+├── app/
+│   ├── about/
+│   ├── cart/
+│   ├── contact/
+│   ├── login/
+│   ├── shop/
+│   ├── signup/
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components/
+│   ├── Categories.tsx
+│   ├── Features.tsx
+│   ├── Footer.tsx
+│   ├── Hero.tsx
+│   ├── Navbar.tsx
+│   ├── Products.tsx
+│   └── Testimonials.tsx
+├── public/
+├── types/
+├── .env.example
+├── .gitignore
+├── eslint.config.mjs
+├── next.config.ts
+├── package.json
+├── postcss.config.mjs
+├── README.md
+├── tsconfig.json
+└── node_modules (generated locally)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
+- Node.js 18+
+- Running backend on localhost:8080
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Installation
+```bash
+cd frontend
+npm install
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment variables
+Create a `.env.local` file in `frontend/`:
 
-## Learn More
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Run locally
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The app runs at:
+- http://localhost:3000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## API usage
+The frontend uses the backend at `NEXT_PUBLIC_API_URL` for:
+- product listing
+- category listing
+- login
+- signup
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+- The login/signup flows are connected to the backend auth API.
+- Protected admin actions require a valid JWT token from the server.
+- For production, use environment-specific API URLs and secure deployment settings.
